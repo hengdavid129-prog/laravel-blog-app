@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout.master>
     <!-- Page content-->
     <div class="container mt-5">
         <div class="row">
@@ -119,4 +119,4 @@
             </div>
         </div>
     </div>
-</x-layout>
+</x-layout.master>

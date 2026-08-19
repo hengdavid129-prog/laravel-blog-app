@@ -24,7 +24,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li>
-                            <a class="dropdown-item" href="./admin/category/index.html">Category</a>
+                            <a class="dropdown-item" href="{{ route('category.index') }}">Category</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="./admin/tag/index.html">Tag</a>
