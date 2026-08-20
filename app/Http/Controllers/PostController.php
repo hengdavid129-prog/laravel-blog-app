@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -30,6 +31,7 @@ class PostController extends Controller
     {
         $categories = Category::orderBy('id', 'desc')->get();
         $tags = Tag::orderBy('id', 'desc')->get();
+
         return view('post.create', [
             'categories' => $categories,
             'tags' => $tags
@@ -65,27 +67,50 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Post $post)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Post $post)
     {
-        //
+        $post->load(['category', 'tags']);
+        $categories = Category::orderBy('id', 'desc')->get();
+        $tags = Tag::orderBy('id', 'desc')->get();
+
+        return view('post.edit', [
+            'post' => $post,
+            'categories' => $categories,
+            'tags' => $tags
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
-        //
+        $data = $request->validated();
+
+        DB::transaction(function () use ($data, $post) {
+            $thumbnail_path = $post->thumbnail;
+
+            if (! empty($data['thumbnail'])) {
+                if ($post->thumbnail) {
+                    Storage::disk('public')->delete($post->thumbnail);
+                }
+                $thumbnail_path = $data['thumbnail']->store('posts', 'public');
+            }
+
+            $post->update([
+                'title' => $data['title'],
+                'content' => $data['content'] ?? null,
+                'thumbnail' => $thumbnail_path,
+                'category_id' => $data['category_id']
+            ]);
+
+            $post->tags()->sync($data['tag_ids'] ?? []);
+        });
+
+
+        return redirect()->route('post.index');
     }
 
     /**

@@ -57,7 +57,7 @@
                                     <td>{{ ($post->updated_at)->format('Y-m-d') }}</td>
                                     <td>
                                         <div class="d-flex justify-center align-items-center gap-1">
-                                            <a class="btn btn-primary btn-sm" href="create_edit.html" role="button">
+                                            <a class="btn btn-primary btn-sm" href="{{ route('post.edit', $post) }}" role="button">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </a>
                                             <form action="" method="POST">

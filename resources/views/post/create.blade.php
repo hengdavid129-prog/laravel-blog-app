@@ -25,7 +25,8 @@
                     <div class="form-check form-check-inline">
                         <input
                             class="form-check-input"
-                            type="checkbox" name="tag_ids[]"
+                            type="checkbox"
+                            name="tag_ids[]"
                             value="{{ $tag->id }}"
                             id="tag-{{ $tag->id }}"
                             {{ in_array($tag->id, old('tag_ids', [])) ? 'checked' : '' }}
