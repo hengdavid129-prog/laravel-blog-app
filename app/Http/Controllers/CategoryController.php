@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Category;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -21,25 +21,25 @@ class CategoryController extends Controller
         return view('category.create');
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $data = $request->all();
+        $data = $request->validated();
 
         Category::create($data);
 
         return redirect()->route('category.index');
     }
 
-    public function show(Category $category)
+    public function edit(Category $category)
     {
         return view('category.edit', [
             'category' => $category,
         ]);
     }
 
-    public function update(Request $request, Category $category)
+    public function update(CategoryRequest $request, Category $category)
     {
-        $data = $request->all();
+        $data = $request->validated();
         $category->update($data);
 
         return redirect()->route('category.index');
