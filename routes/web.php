@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TagController;
@@ -34,4 +35,8 @@ Route::prefix('post')->group(function () {
     Route::get('/edit/{post}', [PostController::class, 'edit'])->name('post.edit');
     Route::put('update/{post}', [PostController::class, 'update'])->name('post.update');
     Route::delete('delete/{post}', [PostController::class, 'destroy'])->name('post.destroy');
+});
+
+Route::prefix('blog')->group(function () {
+    Route::get('/', [BlogController::class, 'index'])->name('blog.index');
 });

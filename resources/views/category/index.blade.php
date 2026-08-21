@@ -8,7 +8,7 @@
             table tr th, td {
                 text-align: center;
                 vertical-align: middle;
-                border: 1px solid rgb(186, 185, 185);
+                border: 1px solid rgb(211, 211, 211);
             }
         </style>
     @endpush

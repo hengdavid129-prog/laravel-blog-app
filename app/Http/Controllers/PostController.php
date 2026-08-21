@@ -6,7 +6,6 @@ use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,7 +19,7 @@ class PostController extends Controller
         $posts = Post::with(['category', 'tags'])->orderBy('id', 'desc')->get();
 
         return view('post.index', [
-            'posts' => $posts
+            'posts' => $posts,
         ]);
     }
 
@@ -118,6 +117,15 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        DB::transaction( function() use($post) {
+            if ($post->thumbnail) {
+                Storage::disk('public')->delete($post->thumbnail);
+            }
+
+            $post->tags()->detach();
+            $post->delete();
+        });
+
+        return redirect()->route('post.index');
     }
 }

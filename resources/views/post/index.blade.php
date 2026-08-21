@@ -8,7 +8,7 @@
             table tr th, td {
                 text-align: center;
                 vertical-align: middle;
-                border: 1px solid rgb(186, 185, 185);
+                border: 1px solid rgb(211, 211, 211);
             }
         </style>
     @endpush
@@ -40,11 +40,13 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div class="img-container" style="width: 6rem;">
-                                                <img style="width: 100%; height: 100%; object-fit: covert;" src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}">
+                                        @if (! is_null($post->thumbnail))
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <div class="img-container" style="width: 6rem;">
+                                                    <img style="width: 100%; height: 100%; object-fit: covert;" src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}">
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     </td>
                                     <td>{{ $post->title }}</td>
                                     <td>{{ $post->category->name }}</td>
@@ -60,7 +62,7 @@
                                             <a class="btn btn-primary btn-sm" href="{{ route('post.edit', $post) }}" role="button">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </a>
-                                            <form action="" method="POST">
+                                            <form action="{{ route('post.destroy', $post) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?')">
                                                 @csrf
                                                 @method('DELETE')
 
