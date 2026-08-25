@@ -19,12 +19,15 @@
                                         />
                                     </a>
                                     <div class="card-body">
-                                        <div class="small text-muted">{{ ($post->created_at)->format('F j, Y') }}</div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="small text-muted">{{ ($post->created_at)->format('F j, Y') }}</div>
+                                            <div class="small text-muted">{{ ($post->created_at)->diffForHumans() }}</div>
+                                        </div>
                                         <h2 class="card-title">{{ $post->title }}</h2>
                                         <p class="card-text">
                                             {{ $post->content ?? null }}
                                         </p>
-                                        <a class="btn btn-primary" href="./blog.html">Read more →</a>
+                                        <a class="btn btn-primary" href="{{ route('blog.show', $post) }}">Read more →</a>
                                     </div>
                                 </div>
                             </div>
@@ -35,12 +38,15 @@
                                     <a href="./blog.html"><img class="card-img-top"
                                             src="{{ asset('storage/' . $post->thumbnail) }}" alt="{{ $post->title }}" /></a>
                                     <div class="card-body">
-                                        <div class="small text-muted">{{ ($post->created_at)->format('F j, Y') }}</div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="small text-muted">{{ ($post->created_at)->format('F j, Y') }}</div>
+                                            <div class="small text-muted">{{ ($post->created_at)->diffForHumans() }}</div>
+                                        </div>
                                         <h2 class="card-title h4">{{ $post->title }}</h2>
                                         <p class="card-text">
                                             {{ $post->content }}
                                         </p>
-                                        <a class="btn btn-primary" href="./blog.html">Read more →</a>
+                                        <a class="btn btn-primary" href="{{ route('blog.show', $post) }}">Read more →</a>
                                     </div>
                                 </div>
                             </div>
@@ -91,9 +97,9 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <ul class="list-unstyled mb-0">
-                                    <li><a href="#!">Web Design</a></li>
-                                    <li><a href="#!">HTML</a></li>
-                                    <li><a href="#!">Freebies</a></li>
+                                    @foreach ($tags as $tag)
+                                        <li><a href="#!">{{ $tag->name }}</a></li>
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>

@@ -3,14 +3,24 @@
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RegisteredUserController;
+use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', [BlogController::class, 'index'])->name('blog.index')->middleware('auth');
+
+Route::prefix('auth')->group(function () {
+    Route::middleware('guest')->group(function() {
+        Route::get('/register', [RegisteredUserController::class, 'create'])->name('auth.register');
+        Route::post('/register', [RegisteredUserController::class, 'store'])->name('register');
+        Route::get('/login', [SessionsController::class, 'create'])->name('auth.login');
+        Route::post('/login', [SessionsController::class, 'store'])->name('login');
+    });
+    Route::delete('/logout', [SessionsController::class, 'destroy'])->name('logout');
 });
 
-Route::prefix('category')->group(function () {
+Route::middleware('auth')->prefix('category')->group(function () {
     Route::get('/', [CategoryController::class, 'index'])->name('category.index');
     Route::get('/create', [CategoryController::class, 'create'])->name('category.create');
     Route::post('/store', [CategoryController::class, 'store'])->name('category.store');
@@ -19,7 +29,7 @@ Route::prefix('category')->group(function () {
     Route::delete('delete/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
 });
 
-Route::prefix('tag')->group(function () {
+Route::middleware('auth')->prefix('tag')->group(function () {
     Route::get('/', [TagController::class, 'index'])->name('tag.index');
     Route::get('/create', [TagController::class, 'create'])->name('tag.create');
     Route::post('/store', [TagController::class, 'store'])->name('tag.store');
@@ -28,7 +38,7 @@ Route::prefix('tag')->group(function () {
     Route::delete('delete/{tag}', [TagController::class, 'destroy'])->name('tag.destroy');
 });
 
-Route::prefix('post')->group(function () {
+Route::middleware('auth')->prefix('post')->group(function () {
     Route::get('/', [PostController::class, 'index'])->name('post.index');
     Route::get('/create', [PostController::class, 'create'])->name('post.create');
     Route::post('/store', [PostController::class, 'store'])->name('post.store');
@@ -38,5 +48,5 @@ Route::prefix('post')->group(function () {
 });
 
 Route::prefix('blog')->group(function () {
-    Route::get('/', [BlogController::class, 'index'])->name('blog.index');
+    Route::get('/show/{post}', [BlogController::class, 'show'])->name('blog.show')->middleware('auth');
 });

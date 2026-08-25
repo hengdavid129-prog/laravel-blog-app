@@ -8,35 +8,52 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Category 1</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Category 2</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Category 3</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Manage
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li>
-                            <a class="dropdown-item" href="{{ route('category.index') }}">Category</a>
+                @auth
+                    @foreach ($navCategory as $category)
+                        <li class="nav-item">
+                            <a class="nav-link"
+                                href="{{ route('blog.index', ['category' => $category->id]) }}">{{ $category->name }}</a>
                         </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ route('tag.index') }}">Tag</a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider" />
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ route('post.index') }}">Post</a>
-                        </li>
-                    </ul>
-                </li>
+                    @endforeach
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Manage
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('category.index') }}">Category</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('tag.index') }}">Tag</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('post.index') }}">Post</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="dropdown-item">Log out</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                @endauth
+                @guest
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            href="{{ route('auth.register') }}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            href="{{ route('auth.login') }}">Login</a>
+                    </li>
+                @endguest
             </ul>
         </div>
     </div>
