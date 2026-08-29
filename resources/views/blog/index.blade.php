@@ -6,12 +6,19 @@
             <div class="col-lg-8">
                 <!-- Nested row for non-featured blog posts-->
                 <div class="row">
-                    @foreach ($posts as $post)
+                    @if ($searchTerm)
+                        <div class="alert alert-secondary d-flex justify-content-between align-items-center">
+                            Showing results for: <strong>"{{ $searchTerm }}"</strong>
+                            <a href="{{ route('blog.index') }}" class="btn btn-sm btn-outline-secondary">Clear Search</a>
+                        </div>
+                    @endif
+
+                    @forelse ($posts as $post)
                         @if ($loop->first)
                             <div class="col-lg-12">
                                 <!-- Featured blog post-->
                                 <div class="card mb-4">
-                                    <a href="./blog.html">
+                                    <a href="{{ route('blog.show', $post) }}">
                                         <img
                                             class="card-img-top"
                                             src="{{ asset('storage/' . $post->thumbnail) }}"
@@ -51,7 +58,11 @@
                                 </div>
                             </div>
                         @endif
-                    @endforeach
+                    @empty
+                        <div class="col-lg-12">
+                            <p class="text-muted">No posts found{{ $searchTerm ? "for \"{$searchTerm}\"" : '' }}.</p>
+                        </div>
+                    @endforelse
                 </div>
                 <!-- Pagination-->
                 <nav aria-label="Pagination">
@@ -81,13 +92,20 @@
                 <div class="card mb-4">
                     <div class="card-header">Search</div>
                     <div class="card-body">
-                        <div class="input-group">
-                            <input class="form-control" type="text" placeholder="Enter search term..."
-                                aria-label="Enter search term..." aria-describedby="button-search" />
-                            <button class="btn btn-primary" id="button-search" type="button">
-                                Go!
-                            </button>
-                        </div>
+                        <form method="GET" action="{{ route('blog.index') }}">
+                            <div class="input-group">
+                                <input
+                                    class="form-control"
+                                    type="text"
+                                    name="search"
+                                    value="{{ request('search') }}"
+                                    placeholder="Enter search term..."
+                                    aria-label="Enter search term..."
+                                    aria-describedby="button-search"
+                                />
+                                <button class="btn btn-primary" type="submit">Go!</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <!-- Tags widget-->
